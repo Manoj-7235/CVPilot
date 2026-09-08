@@ -20,11 +20,13 @@
     "nodemailer": "^10.0.1",
     "pdf-parse": "^1.1.1",
     "pg": "^8.23.0",
+    "postcss": "^8",
     "react": "^18",
     "react-circular-progressbar": "^2.2.0",
     "react-dom": "^18",
     "react-dropzone": "^20.0.0",
     "recharts": "^3.10.1",
+    "tailwindcss": "^3.4.1",
     "uuid": "^14.0.1"
   },
   "devDependencies": {
@@ -38,8 +40,6 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
 }

@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cvpilot-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cvpilot
+      POSTGRES_PASSWORD: cvpilot_password
+      POSTGRES_DB: cvpilot
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cvpilot -d cvpilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  cvpilot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cvpilot-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://cvpilot:cvpilot_password@postgres:5432/cvpilot
+      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
+      - SMTP_PORT=${SMTP_PORT:-465}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - EMAIL_FROM=${EMAIL_FROM:-CVPilot <noreply@cvpilot.ai>}
+
+volumes:
+  pgdata:
+    driver: local
